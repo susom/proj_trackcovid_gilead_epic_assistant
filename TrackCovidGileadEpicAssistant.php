@@ -96,9 +96,10 @@ class TrackCovidGileadEpicAssistant extends \ExternalModules\AbstractExternalMod
 
     public function updateRecords($updates) {
         $this->emDebug('updates',$updates);
-        //$q = REDCap::saveData($this->getProjectId(), 'json', json_encode($updates));
+        $q = REDCap::saveData($this->getProjectId(), 'json', json_encode($updates));
         //$this->emDebug($q);
-        return json_encode($updates);
+        // return json_encode($updates);
+        return $q;
     }
 
     // Good
