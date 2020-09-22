@@ -51,6 +51,9 @@ class TrackCovidGileadEpicAssistant extends \ExternalModules\AbstractExternalMod
             "events"        => [ self::EM_EVENT_NAME ],
         ];
 
+        $filterLogic = $this->getProjectSetting('filter-logic');
+        if (!empty($filterLogic)) $params['filterLogic'] = $filterLogic;
+
         $q = REDCap::getData($params);
         return json_decode($q,true);
     }
