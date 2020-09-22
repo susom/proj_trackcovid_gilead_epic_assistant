@@ -11,7 +11,7 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
 
     use emLoggerTrait;
 
-    CONST EM_EVENT_NAME = "screening_arm_1";
+    CONST EM_EVENT_NAME = "baseline_arm_1";
 
 
     public function __construct()
@@ -22,15 +22,15 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
 
     public function redcap_save_record($project_id, $record, $instrument, $event_id, $group_id, $survey_hash = NULL, $response_id = NULL, $repeat_instance = 1) {
 
-        $em_event_id = REDCap::getEventIdFromUniqueEvent($this::EM_EVENT_NAME);
+        $em_event_id = REDCap::getEventIdFromUniqueEvent(self::EM_EVENT_NAME);
 
-        // $this->emDebug(".".$event_id.".", ".".$em_event_id.".");
 
         if ($event_id != $em_event_id) {
             // This is the wrong event
             // $this->emDebug("Wrong Event");
             return;
         }
+
         $this->emDebug("Updating $record");
 
         $records = $this->getRecordData(array($record));
@@ -42,8 +42,6 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
         }
 
     }
-
-
 
     public function getRecordData($records = null) {
         $params = [
@@ -71,28 +69,15 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
 
         foreach ($results as $r) {
 
-            list($city, $state, $zip) = $this->parseCsz($r["csz"]);
-            $address   = $this->parseAddr($r["addr"]);
-            $lang      = $this->parseLang($r['confirm_language']);
-            $ethnicity = $this->parseEthnicity($r);
             $sex       = $this->parseSex($r);
+            $lang      = $this->parseLang($r);
+            $ethnicity = $this->parseEthnicity($r);
 
             $update = [];
 
-            // Update primary_city from CSZ
-            if (( $force || empty($r['primary_city']))           && !empty($city)) $update['primary_city'] = $city;
-
-            // Update State from CSZ
-            if (( $force || empty($r['primary_state']))          && !empty($state)) $update['primary_state'] = $state;
-
-            // Update language
-            if (( $force || empty($r['stanford_epic_lang']))     && !empty($lang)) $update['stanford_epic_lang'] = $lang;
-
-            // Update ethnicity
-            if (( $force || empty($r['stanford_epic_ethnicity']))&& !empty($ethnicity)) $update['stanford_epic_ethnicity'] = $ethnicity;
-
-            // Update ethnicity
-            if (( $force || empty($r['stanford_epic_sex']))      && !empty($sex)) $update['stanford_epic_sex'] = $sex;
+            if (( $force || empty($r['epic_lang']))     && !empty($lang))      $update['epic_lang']      = $lang;
+            if (( $force || empty($r['epic_ethnicity']))&& !empty($ethnicity)) $update['epic_ethnicity'] = $ethnicity;
+            if (( $force || empty($r['epic_sex']))      && !empty($sex))       $update['epic_sex']       = $sex;
 
 
             if (!empty($update)) {
@@ -108,11 +93,12 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
 
     public function updateRecords($updates) {
         $this->emDebug('updates',$updates);
-        $q = REDCap::saveData($this->getProjectId(), 'json', json_encode($updates));
+        //$q = REDCap::saveData($this->getProjectId(), 'json', json_encode($updates));
         //$this->emDebug($q);
-        return $q;
+        return json_encode($updates);
     }
 
+    // Good
     public function parseSex($row) {
         $saad = $row["saab"];
         switch ($saad) {
@@ -129,52 +115,40 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
         return $sex;
     }
 
-    public function parseCsz($csz)
+    // Good
+    public function parseLang($row)
     {
         global $module;
 
-        $re      = '/^([^,]+)\,\s+(\w+)\s+(\d{5})/';
-        $matches = [];
-        $count   = preg_match_all($re, $csz, $matches);
-
-        $city  = isset($matches[1][0]) ? trim($matches[1][0]) : "";
-        $state = isset($matches[2][0]) ? trim($matches[2][0]) : "";
-        $zip   = isset($matches[3][0]) ? trim($matches[3][0]) : "";
-
-        return array($city, $state, $zip);
-    }
-
-    public function parseAddr($addr)
-    {
-        global $module;
-        // $module->emDebug($addr);
-
-        return trim($addr);
-    }
-
-    public function parseLang($lang)
-    {
-        global $module;
-        // $module->emDebug($lang);
+        $lang = $row['non_english'];
 
         switch ($lang) {
             case "1":
-                $result = "ENG";
+                $result = "SPA";
                 break;
             case "2":
-                $result = "SPA";
+                $result = "CAN";
                 break;
             case "3":
                 $result = "MDN";
                 break;
             case "4":
-                $result = "TGL";
+                $result = "RUS";
                 break;
             case "5":
+                $result = "TGL";
+                break;
+            case "6":
+                $result = "FRE";
+                break;
+            case "7":
+                $result = "KOR";
+                break;
+            case "8":
                 $result = "VIE";
                 break;
             default:
-                $result = "";
+                $result = "ENG";
         }
 
         return trim($result);
@@ -182,7 +156,7 @@ class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
     }
 
     public function parseEthnicity($row) {
-            // Figure out ethnicity
+        // Figure out ethnicity
         $latino_origin = $row['latino_origin'];
         switch ($latino_origin) {
             case "1":
