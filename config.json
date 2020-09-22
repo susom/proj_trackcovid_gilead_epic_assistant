@@ -1,7 +1,7 @@
 {
 	"name": "TrackCOVID Gilead Epic Assistant",
 
-	"namespace": "Stanford\\TrackCovidGileadAssistant",
+	"namespace": "Stanford\\TrackCovidGileadEpicAssistant",
 
 	"description": "A tool to update reporting fields for bulk epic registration",
 
