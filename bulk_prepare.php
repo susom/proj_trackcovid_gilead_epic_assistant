@@ -1,6 +1,6 @@
 <?php
-namespace Stanford\TrackCovidGileadAssistant;
-/** @var TrackCovidGileadAssistant $module */
+namespace Stanford\TrackCovidGileadEpicAssistant;
+/** @var TrackCovidGileadEpicAssistant $module */
 
 use \REDCap;
 

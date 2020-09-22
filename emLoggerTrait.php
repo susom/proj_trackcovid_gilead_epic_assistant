@@ -1,6 +1,6 @@
 <?php
-namespace Stanford\TrackCovidGileadAssistant;
-/** @var TrackCovidGileadAssistant $this */
+namespace Stanford\TrackCovidGileadEpicAssistant;
+/** @var TrackCovidGileadEpicAssistant $this */
 
 trait emLoggerTrait
 {

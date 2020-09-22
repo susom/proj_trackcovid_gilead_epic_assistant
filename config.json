@@ -26,7 +26,7 @@
 	"links": {
 		"project": [
             {
-				"name": "Prepare All Stanford EPIC data",
+				"name": "Prepare Fields for EPIC MRN",
 				"icon": "report",
 				"url":  "bulk_prepare"
 			}

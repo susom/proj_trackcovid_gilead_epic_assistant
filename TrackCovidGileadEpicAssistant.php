@@ -1,12 +1,12 @@
 <?php
 
-namespace Stanford\TrackCovidGileadAssistant;
+namespace Stanford\TrackCovidGileadEpicAssistant;
 
 require_once "emLoggerTrait.php";
 
 use \REDCap;
 
-class TrackCovidGileadAssistant extends \ExternalModules\AbstractExternalModule
+class TrackCovidGileadEpicAssistant extends \ExternalModules\AbstractExternalModule
 {
 
     use emLoggerTrait;
