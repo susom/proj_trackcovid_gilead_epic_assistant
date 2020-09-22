@@ -1,0 +1,76 @@
+{
+	"name": "TrackCOVID Gilead Epic Assistant",
+
+	"namespace": "Stanford\\TrackCovidGileadAssistant",
+
+	"description": "A tool to update reporting fields for bulk epic registration",
+
+	"documentation": "README.md",
+
+    "framework-version": 4,
+
+	"authors": [
+		{
+			"name": "Andrew Martin",
+			"email": "andy123@stanford.edu",
+			"institution": "Stanford University"
+		}
+	],
+
+	"permissions": [
+        "redcap_save_record"
+	],
+
+	"enable-every-page-hooks-on-system-pages": false,
+
+	"links": {
+		"project": [
+            {
+				"name": "Prepare All Stanford EPIC data",
+				"icon": "report",
+				"url":  "bulk_prepare"
+			}
+		],
+		"control-center": [
+
+		]
+	},
+
+	"project-settings": [
+		{
+			"key": "filter-logic",
+			"name": "<b>Filter Logic</b><br>Logical expression to select records that need bulk-mrn registration",
+			"required": false,
+			"type": "textarea"
+		},
+		{
+			"key": "force-update",
+			"name": "<b>Force Update</b><br><i>(optional)</i> Push updated values into fields",
+			"required": false,
+			"type": "checkbox"
+		},
+		{
+			"key": "enable-project-debug-logging",
+			"name": "<b>Enable Debug Logging</b><br><i>(optional)</i> Requires installation and configuration of emLogger",
+			"required": false,
+			"type": "checkbox"
+		}
+	],
+
+
+	"system-settings": [
+		{
+			"key": "enable-system-debug-logging",
+			"name": "<b>Enable Debug Logging (system-wide)</b><i>(optional)</i> Requires installation and configuration of emLogger",
+			"required": false,
+			"type": "checkbox"
+		}
+	],
+
+	"compatibility": {
+		"php-version-min": "",
+		"php-version-max": "",
+		"redcap-version-min": "",
+		"redcap-version-max": ""
+	}
+}
